@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, Path, Body
+from fastapi import FastAPI, Query, Path, Body, Cookie
 from pydantic import BaseModel, Required
 from typing import Union
 import uvicorn
@@ -13,6 +13,16 @@ class Item(BaseModel):
     desc: Union[str, None] = None
     price: float
     tax: Union[float, None] = None
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "foo",
+                "description": "A very nice Item",
+                "price": 35.5,
+                "tax": 3.2,
+            }
+        }
 
 
 @app.get("/items/{item_id}")
@@ -45,6 +55,8 @@ async def update_items(
 
 
 @app.post("/post")
+
+
 async def create_iem(item: Item = Body(embed=True)):
     item_dict = item.dict()
     if item.tax:
@@ -55,3 +67,5 @@ async def create_iem(item: Item = Body(embed=True)):
 
 if __name__ == "__main__":
     uvicorn.run(app="tmp:app", host="127.0.0.1", port=8888, reload=True)
+
+https://github.com/PathOfBuildingCommunity/PathOfBuilding
